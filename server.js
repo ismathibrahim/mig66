@@ -12,14 +12,20 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Welcome current user
 io.on("connection", (socket) => {
+  // Welcome current user
   socket.emit("message", "welcome to digeon!");
 
-  //Broadcast when a user connects
+  // Broadcast when a user connects
   socket.broadcast.emit("message", "a user has joined the chat");
 
-  //Broadcast when client disconnects
+  // Broadcast when client disconnects
   socket.on("disconnect", () => {
     io.emit("message", "a user has left the chat");
+  });
+
+  // Listen for new chat message
+  socket.on("chatMessage", (message) => {
+    io.emit("message", message);
   });
 });
 
